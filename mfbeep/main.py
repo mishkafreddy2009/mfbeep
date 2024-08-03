@@ -1,12 +1,13 @@
 import os
 import time
-from enum import Enum
 from typing import Annotated
 from pathlib import Path
 
 import typer
 from rich.progress import track
 from anyplayer import get_player
+
+from mfbeep.models import Sounds
 
 BASE_DIRECTORY = Path(__file__).resolve().parent
 SOUNDS_DIRECTORY = Path.joinpath(BASE_DIRECTORY, "sounds")
@@ -17,20 +18,20 @@ class Sound:
         self.sound_file = sound_file
 
     def play_wait(self) -> None:
-        """playing sound and waits until its done"""
         player = get_player("auto", self.sound_file)
         player.start()
         player.wait()
 
     def play(self) -> None:
-        """playing sound"""
         player = get_player("auto", self.sound_file)
         player.start()
 
 
 class SoundsManager:
     mp3_sounds = [
-        f"{SOUNDS_DIRECTORY}/{file}" for file in os.listdir(SOUNDS_DIRECTORY) if file.endswith(".mp3")
+        f"{SOUNDS_DIRECTORY}/{file}"
+        for file in os.listdir(SOUNDS_DIRECTORY)
+        if file.endswith(".mp3")
     ]
 
     def get_sound(self, title: str) -> Sound:
@@ -45,7 +46,7 @@ class Beep:
         self.sounds_manager = SoundsManager()
         self.sound = self.sounds_manager.get_sound(sound_title)
 
-    def test_sound(self):
+    def test_sound(self) -> None:
         self.sound.play_wait()
 
     def start(
@@ -53,28 +54,21 @@ class Beep:
         sessions_amount: int,
         work_duration_minutes: int,
         break_duration_minutes: int,
-    ):
+    ) -> None:
         for session_number in range(1, sessions_amount + 1):
             for _ in track(
-                range(work_duration_minutes),
-                description=f"working [{session_number}/{sessions_amount}]",
+                range(work_duration_minutes * 60),
+                description=f"working... [{session_number}/{sessions_amount}]",
             ):
                 time.sleep(1)
             self.sound.play()
             for _ in track(
-                range(break_duration_minutes),
-                description=f"chilling [{session_number}/{sessions_amount}]",
+                range(break_duration_minutes * 60),
+                description=f"chilling... [{session_number}/{sessions_amount}]",
             ):
                 time.sleep(1)
             self.sound.play()
-
-
-class Sounds(str, Enum):
-    nya = "nya"
-    boom = "boom"
-    beep = "beep"
-    antabaka = "antabaka"
-    amongus = "amongus"
+            input("ready for work? ")
 
 
 def main(
@@ -93,5 +87,6 @@ def main(
     beep = Beep(sound)
     beep.start(sessions_amount, work_duration_minutes, break_duration_minutes)
 
+
 def app():
-    typer.run(main)
+    raise SystemExit(typer.run(main))

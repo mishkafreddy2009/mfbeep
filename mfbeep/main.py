@@ -1,5 +1,6 @@
 import os
 import time
+import platform
 from typing import Annotated
 from pathlib import Path
 
@@ -57,13 +58,13 @@ class Beep:
     ) -> None:
         for session_number in range(1, sessions_amount + 1):
             for _ in track(
-                range(work_duration_minutes * 60),
+                range(work_duration_minutes),
                 description=f"working... [{session_number}/{sessions_amount}]",
             ):
                 time.sleep(1)
             self.sound.play()
             for _ in track(
-                range(break_duration_minutes * 60),
+                range(break_duration_minutes),
                 description=f"chilling... [{session_number}/{sessions_amount}]",
             ):
                 time.sleep(1)
@@ -83,7 +84,10 @@ def main(
         int, typer.Argument(help="one break session duration in minutes")
     ] = 5,
 ) -> None:
-    os.system("clear")
+    if platform.system() == "Windows":
+        os.system("cls")
+    else:
+        os.system("clear")
     beep = Beep(sound)
     beep.start(sessions_amount, work_duration_minutes, break_duration_minutes)
 

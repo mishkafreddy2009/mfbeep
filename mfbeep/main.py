@@ -58,13 +58,13 @@ class Beep:
     ) -> None:
         for session_number in range(1, sessions_amount + 1):
             for _ in track(
-                range(work_duration_minutes),
+                range(work_duration_minutes * 60),
                 description=f"working... [{session_number}/{sessions_amount}]",
             ):
                 time.sleep(1)
             self.sound.play()
             for _ in track(
-                range(break_duration_minutes),
+                range(break_duration_minutes * 60),
                 description=f"chilling... [{session_number}/{sessions_amount}]",
             ):
                 time.sleep(1)

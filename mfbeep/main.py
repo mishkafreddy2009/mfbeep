@@ -57,6 +57,8 @@ class Beep:
         break_duration_minutes: int,
     ) -> None:
         for session_number in range(1, sessions_amount + 1):
+            if session_number > 1:
+                input("ready for work? ")
             for _ in track(
                 range(work_duration_minutes * 60),
                 description=f"working... [{session_number}/{sessions_amount}]",
@@ -69,7 +71,6 @@ class Beep:
             ):
                 time.sleep(1)
             self.sound.play()
-            input("ready for work? ")
 
 
 def main(

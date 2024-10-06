@@ -75,15 +75,9 @@ class Beep:
 
 def main(
     sound: Annotated[Sounds, typer.Option(help="select beep sound")] = Sounds.nya,
-    sessions_amount: Annotated[
-        int, typer.Argument(help="work and break cycles amount")
-    ] = 4,
-    work_duration_minutes: Annotated[
-        int, typer.Argument(help="one work session duration in minutes")
-    ] = 30,
-    break_duration_minutes: Annotated[
-        int, typer.Argument(help="one break session duration in minutes")
-    ] = 5,
+    sessions_amount: Annotated[int, typer.Argument(help="work and break cycles amount")] = 4,
+    work_duration_minutes: Annotated[int, typer.Argument(help="one work session duration in minutes")] = 30,
+    break_duration_minutes: Annotated[int, typer.Argument(help="one break session duration in minutes")] = 5,
 ) -> None:
     if platform.system() == "Windows":
         os.system("cls")
